@@ -1,0 +1,36 @@
+import { REST, Routes } from 'discord.js';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const commands = [];
+
+// ✅ IMPORTANT: your commands are inside src/commands
+const foldersPath = path.join(process.cwd(), 'src', 'commands');
+const commandFolders = fs.readdirSync(foldersPath);
+
+// Load all commands
+for (const folder of commandFolders) {
+    const commandsPath = path.join(foldersPath, folder);
+    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+    for (const file of commandFiles) {
+        const filePath = path.join(commandsPath, file);
+        const command = await import(filePath);
+
+        if (command.default?.data) {
+            commands.push(command.default.data.toJSON());
+        }
+    }
+}
+
+const rest = new REST({ version: '10' }).setToken(process.env.MTQ5Mjg3MjI1NTEwODAyMjQ0Mw.GXWgZO.NtK9pftXPd9wc-VJj4DrWtXDJo5vIwf5nMyWqw);
+
+await rest.put(
+    Routes.applicationCommands(process.env.1492872255108022443),
+    { body: commands }
+);
+
+console.log('✅ Slash commands deployed successfully');
