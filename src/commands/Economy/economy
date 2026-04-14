@@ -1,0 +1,40 @@
+import fs from 'fs';
+import path from 'path';
+
+const dataPath = path.resolve('./balance');
+
+function ensureDir(dir) {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+}
+
+export async function getEconomyData(client, guildId, userId) {
+    ensureDir(dataPath);
+
+    const filePath = path.join(dataPath, `${guildId}-${userId}.json`);
+
+    if (!fs.existsSync(filePath)) {
+        const defaultData = {
+            wallet: 0,
+            bank: 0
+        };
+
+        fs.writeFileSync(filePath, JSON.stringify(defaultData, null, 2));
+        return {
+            ...defaultData,
+            save: async function () {
+                fs.writeFileSync(filePath, JSON.stringify(this, null, 2));
+            }
+        };
+    }
+
+    const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+    return {
+        ...data,
+        save: async function () {
+            fs.writeFileSync(filePath, JSON.stringify(this, null, 2));
+        }
+    };
+}
