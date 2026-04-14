@@ -55,3 +55,5 @@ export default {
 
     }, { command: 'addmoney' })
 };
+
+import { getEconomyData } from '../../utils/economy.js';
