@@ -26,10 +26,10 @@ for (const folder of commandFolders) {
     }
 }
 
-const rest = new REST({ version: '10' }).setToken(process.env.MTQ5Mjg3MjI1NTEwODAyMjQ0Mw.GXWgZO.NtK9pftXPd9wc-VJj4DrWtXDJo5vIwf5nMyWqw);
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN=);
 
 await rest.put(
-    Routes.applicationCommands(process.env.1492872255108022443),
+    Routes.applicationCommands(process.env.CLIENTID),
     { body: commands }
 );
 
